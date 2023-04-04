@@ -10,12 +10,6 @@
 
 void print_header(Line &tmp_line, const std::string &stop, int j);
 
-Time_table &print_time_departs(Time_table &time);
-
-Time_table &times_without_drivers_begin(Time_table &time);
-
-Time_table &times_without_drivers_end(Time_table &time);
-
 int main(int argc, char **argv) {
 
     // Load files:
@@ -50,8 +44,8 @@ int main(int argc, char **argv) {
         }
         // end of input check
 
-        std::cout << "\n";
-        Time_table time; // time struct
+        Time_table_fwd time_fwd; // time_fwd struct
+        Time_table_bwd time_bwd; // time_bwd struct
         Line tmp_line;
         int nmb_of_lines = net.nlines(); // number of lines
         for (std::string stop: stop_in) {
@@ -62,28 +56,51 @@ int main(int argc, char **argv) {
                 if (find_stop != tmp_line.stops.end()) { // if our stop is in current line
                     print_header(tmp_line, stop, j); // printing header
 
-                    time.counter = 0;
+                    time_fwd.counter = 0;
+                    time_bwd.counter = 0;
+                    std::vector<Time_table_fwd> time_fwd_vec;
+                    std::vector<Time_table_bwd> time_bwd_vec;
                     char oldFill = std::cout.fill(' '); // default fill
                     auto index = std::distance(tmp_line.stops.begin(), find_stop); // get index of our station
                     for (unsigned int k = 0; k < net.getLine(j).conns_fwd.size(); ++k) {
-                        auto time_def = net.getLine(j).conns_fwd[k];
+                        auto time_def_fwd = net.getLine(j).conns_fwd[k];
+                        auto time_def_bwd = net.getLine(j).conns_bwd[k];
                         //todo - if change conns_fwd to conns_bwd ---> print right values
                         //todo - solve printing righting colum
-                        time.seconds = time_def.at(index).ti.gets();
-                        time.hours = time.seconds / 3600;
-                        time.minutes = (time.seconds % 3600) / 60;
-                        if (k == 0) {
-                            time = times_without_drivers_begin(time);
+                        time_fwd.seconds = time_def_fwd.at(index).ti.gets();
+                        time_fwd.hours = time_fwd.seconds / 3600;
+                        time_fwd.minutes = (time_fwd.seconds % 3600) / 60;
+                        time_bwd.seconds = time_def_bwd.at(index).ti.gets();
+                        time_bwd.hours = time_bwd.seconds / 3600;
+                        time_bwd.minutes = (time_bwd.seconds % 3600) / 60;
+                        time_fwd_vec.push_back(time_fwd);
+                        time_bwd_vec.push_back(time_bwd);
+                    }
+                    for (unsigned int t = 0; t < 24; ++t) {
+                        std::cout << "\n| " << std::setw(2) << std::setfill('0') << t << " |";
+                        for (unsigned int n = 0; n < time_fwd_vec.size(); ++ n){
+                            if (time_fwd_vec[n].hours == t){
+                                std::cout << " " << std::setw(2) << std::setfill('0') << time_fwd_vec[n].minutes;
+                                time_fwd.counter ++;
+                            }
                         }
-                        time = print_time_departs(time);
+                        std::cout << std::setw(33 - 3 * time_fwd.counter) << std::setfill(' ') << " ";
+                        time_fwd.counter = 0;
+                        std::cout << "|| " << std::setw(2) << std::setfill('0') << t << " |";
+                        for (unsigned int m = 0; m < time_bwd_vec.size(); ++ m){
+                            if (time_bwd_vec[m].hours == t){
+                                std::cout << " " << std::setw(2) << std::setfill('0') << time_bwd_vec[m].minutes;
+                                time_bwd.counter ++;
+                            }
+                        }
+                        std::cout << std::setw(34 - 3 * time_bwd.counter) << std::setfill(' ') << " |";
+                        time_bwd.counter = 0;
                     }
 
-                    time.counter = time.hours;
-                    time = times_without_drivers_end(time);
+
                     std::cout.fill(oldFill); // set fill to default
                     std::cout << "\n+----+---------------------------------++----+---------------------------------+\n";
                 }
-                //tmp_line.stops.clear(); // clear tmp_line, it is not mandatory
             }
         }
 
@@ -119,44 +136,19 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-Time_table &times_without_drivers_end(Time_table &time) {
-    if (time.counter < 23){ // print rest of time in end
-        for (unsigned int t = time.counter + 1; t <= 23; ++t){
-            std::cout << "\n| " << std::setw(2) << std::setfill('0') << t << " |";
-            time.counter ++;
-        }
-    }
-    return time;
-}
-
-Time_table &times_without_drivers_begin(Time_table &time) {
-    if (time.counter < time.hours){ // print rest of time in begin
-        for (unsigned int t = 0; t < time.hours; ++t){
-            std::cout << "\n| " << std::setw(2) << std::setfill('0') << t << " |";
-            time.counter ++;
-        }
-    }
-    return time;
-}
-
-Time_table &print_time_departs(Time_table &time) {
-    if (time.tmp_hours != time.hours) {
-        std::cout << "\n| " << std::setw(2) << std::setfill('0') << time.hours << " | " << std::setw(2) << std::setfill('0') << time.minutes;
-    }
-    else if (time.tmp_hours == time.hours) {
-        std::cout << " " << std::setw(2) << std::setfill('0') << time.minutes;
-    }
-    time.tmp_hours = time.hours;
-    return time;
-}
-
 void print_header(Line &tmp_line, const std::string &stop, int j) {
     std::cout << "+------------------------------------------------------------------------------+\n";
-    std::cout << "| " << stop << std::setw(76 - stop.size()) << "Line: " << j << "|\n";
+    std::cout << "| " << stop << std::setw(75 - stop.length()) << "Line: " << j << " |\n";
     std::cout << "+--------------------------------------++--------------------------------------+\n";
-    std::string last_stop = tmp_line.stops.back().erase(tmp_line.stops.back().find("\r"),
-                                                        2); // remove \r symbol
+
+    std::string last_stop;
+    size_t  index = tmp_line.stops.back().find("\r");
+    if(index == std::string::npos){
+        last_stop = tmp_line.stops.back();
+    }else{
+        last_stop = tmp_line.stops.back().erase(tmp_line.stops.back().find("\r"),2);
+    }
     std::cout << "| To: " << last_stop << std::setw(40 - last_stop.length()) << "|| To: "
-              << tmp_line.stops[0] << std::setw(35 - tmp_line.stops[0].size()) << "|\n";
+              << tmp_line.stops[0] << std::setw(35 - tmp_line.stops[0].length()) << "|\n";
     std::cout << "+----+---------------------------------++----+---------------------------------+";
 }
