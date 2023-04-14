@@ -65,8 +65,6 @@ int main(int argc, char **argv) {
                     for (unsigned int k = 0; k < net.getLine(j).conns_fwd.size(); ++k) {
                         auto time_def_fwd = net.getLine(j).conns_fwd[k];
                         auto time_def_bwd = net.getLine(j).conns_bwd[k];
-                        //todo - if change conns_fwd to conns_bwd ---> print right values
-                        //todo - solve printing righting colum
                         time_fwd.seconds = time_def_fwd.at(index).ti.gets();
                         time_fwd.hours = time_fwd.seconds / 3600;
                         time_fwd.minutes = (time_fwd.seconds % 3600) / 60;
@@ -146,7 +144,7 @@ void print_header(Line &tmp_line, const std::string &stop, int j) {
     if(index == std::string::npos){
         last_stop = tmp_line.stops.back();
     }else{
-        last_stop = tmp_line.stops.back().erase(tmp_line.stops.back().find("\r"),2);
+        last_stop = tmp_line.stops.back().erase(index,2);
     }
     std::cout << "| To: " << last_stop << std::setw(40 - last_stop.length()) << "|| To: "
               << tmp_line.stops[0] << std::setw(35 - tmp_line.stops[0].length()) << "|\n";
