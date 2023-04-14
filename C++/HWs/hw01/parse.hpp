@@ -29,7 +29,7 @@ typedef struct{
 typedef struct {
     int min;
     int max;
-    unsigned int width;
+    int width;
     std::string align;
     int stretch;
     int header;

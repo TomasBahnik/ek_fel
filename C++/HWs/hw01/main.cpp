@@ -19,7 +19,7 @@ void print_config(cfg_values_t &all_cfg_values);
 
 long max_number_digits(const cfg_values_t &all_cfg_values);
 
-unsigned int GetNumberOfDigits(int i);
+int GetNumberOfDigits(int i);
 
 void print_table_right(int maxRow, unsigned long numberOfMax, const std::vector<std::vector<int>> &values, int count,
                        cfg_values_t &all_cfg_values, int &header);
@@ -215,7 +215,7 @@ void print_table_right(int maxRow, unsigned long numberOfMax, const std::vector<
     }
 }
 
-unsigned int GetNumberOfDigits(int i) {
+int GetNumberOfDigits(int i) {
     return i > 0 ? (int) log10((double) i) + 1 : 1;
 }
 
