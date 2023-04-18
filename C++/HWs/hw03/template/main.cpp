@@ -14,18 +14,38 @@ void Database::add(Item * a) {
 
 // definition of the sort function according to name
 bool sort_name::operator()(const Item *a, const Item * b){
-
+    return false;
 }
 
-// constructor of the Item class
-Item::Item(std::string a, std::string b){
 
-}
 
 Database::~Database(){
 	for (auto i = db.begin(); i != db.end(); i++)
 		delete *i;
 	db.clear();
+}
+// todo solve saving ID in Item
+void Database::list() {
+    std::cout << "list\n";
+    for (Item* item : db) {
+        //item.print_item(); //todo add function to Item and declarate in book + journal
+    }
+}
+
+void Database::find(std::string basicString) {
+    std::cout << "find\n";
+}
+
+void Database::erase(std::string basicString) {
+    std::cout << "erase\n";
+}
+
+void Database::remove(std::string basicString) {
+    std::cout << "remove\n";
+}
+
+void Database::sort(std::string basicString, const char *stringos) {
+    std::cout << "sort\n";
 }
 
 int main() {
@@ -42,12 +62,29 @@ int main() {
 		if ((position = a.find(":")) == std::string::npos) {
 			if (a == "list")
 				db.list();
-		}
+            else {
+                  //todo error handling
+            }
+        }
 		else {
 			std::string command = a.substr(0, position);
 			std::string argument = a.substr(position+1);
 			if (command == "find")
 				db.find (argument);
+            else if(command == "erase"){
+                db.erase (argument);
+            }
+            else if (command == "remove"){
+                db.remove (argument);
+            }
+            else{
+                if ((position = argument.find(":")) == std::string::npos) {
+                    db.sort (argument, "asc"); //vzestupne
+            } else{
+                    std::string argument_sort = argument.substr(0, position);
+                    db.sort (argument_sort, "asc"); //sestupne
+                }
+            }
 		}
 	}
 	return 0;
