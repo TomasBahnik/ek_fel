@@ -25,16 +25,15 @@ Database::~Database() {
 }
 
 // todo solve saving ID in Item
-//Item item;
 void Database::list() {
     std::cout << "list\n";
     for (Item *item : db) {
-        item->print_item(); //todo add function to Item and declarate in book + journal
+        item->print_item();
     }
 }
 
-void Database::find(std::string basicString) {
-    std::cout << "find\n";
+void Database::find(std::string argument) {
+    std::cout << "find" << argument << "\n";
 }
 
 void Database::erase(std::string basicString) {
