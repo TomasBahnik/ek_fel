@@ -1,6 +1,7 @@
 #include <utility>
 #include <vector>
 #include <string>
+#include <iostream>
 
 #ifndef __MAIN_HPP__
 #define __MAIN_HPP__
@@ -12,9 +13,11 @@ protected:
     int ID;
     std::string name, year;
 public:
-    Item(std::string a, std::string b) : name(a), year(b){};
+    Item(std::string name, std::string year) : name(name), year(year){};
     virtual ~Item();
     friend sort_name;
+    virtual void print_item(){
+    } //pure virtual function
 };
 
 Item::~Item() {
@@ -26,6 +29,10 @@ public:
     : Item(std::move(name), std::move(year)), author(std::move(author)) {}
 private:
     std::string author;
+    void print_item() override {
+        Item::print_item();
+        std::cout << name << " " << author << " " << year << "\n";
+    }
 };
 
 // Journal related to the Database
@@ -37,6 +44,10 @@ public:
 private:
     std::string volume;
     std::string issue;
+    void print_item() override {
+        Item::print_item();
+        std::cout << name << " " << volume << " " << issue << " " << year << "\n";
+    }
 };
 
 // declaration of the sort function according to name
