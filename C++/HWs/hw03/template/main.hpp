@@ -1,7 +1,7 @@
 #include <utility>
 #include <vector>
 #include <string>
-#include <iostream>
+//#include <iostream>
 
 #ifndef __MAIN_HPP__
 #define __MAIN_HPP__
@@ -22,13 +22,17 @@ public:
 
     friend sort_name;
 
-    virtual void print_item() {}
+    virtual void print_item();
 
     virtual void set_id() {} //pure virtual functions
 };
 int Item::count = 1;
 
 Item::~Item() {
+}
+
+void Item::print_item() {
+
 }
 
 // Book related to the Database
@@ -39,10 +43,7 @@ public:
 
 private:
     std::string author;
-    void print_item() override {
-        Item::print_item();
-        std::cout << ID << " " << name << " " << author << " " << year << "\n";
-    }
+    void print_item() override;
 };
 
 // Journal related to the Database
@@ -54,11 +55,7 @@ public:
 private:
     std::string volume;
     std::string issue;
-
-    void print_item() override {
-        Item::print_item();
-        std::cout << ID << " " << name << " " << volume << " " << issue << " " << year << "\n";
-    }
+    void print_item() override;
 };
 
 // declaration of the sort function according to name
