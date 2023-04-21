@@ -2,7 +2,12 @@
 #include <sstream>
 #include <algorithm>
 #include <iomanip>
+#include <cmath>
 #include "main.hpp"
+
+int get_number_of_digits(int i) {
+    return i > 0 ? (int) log10((double) i) + 1 : 1;
+}
 
 // table functions
 
@@ -10,15 +15,20 @@ void print_border_basic() { std::cout << "+" << std::string(58, '-') << "+\n"; }
 
 void print_border_cross() { std::cout << "+" << std::string(4, '-') << "+" << std::string(53, '-') << "+\n"; };
 
+void stick_space_stick() { std::cout << "|" << std::setw(6) << "| "; };
+
+void stick_numb_stick(int number) { std::cout << "|" << std::setw(3) << number << " | "; };
+
 void print_header(std::string text){
     print_border_basic();
     std::cout << "| " << text << std::setw(59 - text.size()) << "|\n";
     print_border_cross();
 }
 
-void stick_space_stick() { std::cout << "|" << std::setw(6) << "| "; };
-
-void stick_numb_stick(int number) { std::cout << "|" << std::setw(3) << number << " | "; };
+void print_end (int counter){
+    std::cout << "| Total: " << counter << std::setw(52 - get_number_of_digits(counter)) << "|\n";
+    print_border_basic();
+}
 
 void Journal::print_item() {
     Item::print_item();
@@ -62,15 +72,6 @@ bool Book::find_item(std::string arg) {
     return false;
 }
 
-//bool find_item(std::string arg[], std::string key) {
-//    for (unsigned long i = 0; i < arg->size(); ++i) {
-//        if (arg[i] == key){
-//            return true;
-//        }
-//    }
-//    return false;
-//}
-
 Database::Database() {
     // Database constructor
 }
@@ -92,23 +93,26 @@ Database::~Database() {
     db.clear();
 }
 
-// todo solve saving ID in Item
 void Database::list() {
+    int cnt = 0;
     print_header("List of all records");
     for (Item *item: db) {
         item->print_item();
+        cnt++;
     }
+    print_end(cnt);
 }
 
-
-
 void Database::find(std::string argument) {
+    int cnt = 0;
     print_header("Search for \""+ argument +"\"");
     for (Item *item: db) {
         if(item->find_item(argument)){
             item->print_item();
+            cnt ++;
         }
     }
+    print_end(cnt);
 }
 
 void Database::erase(std::string basicString) {
