@@ -4,13 +4,20 @@
 #include <iomanip>
 #include "main.hpp"
 
-//todo bool Journal::find_argument()
+// table functions
 
-// list functions
+void print_border_basic() { std::cout << "+" << std::string(58, '-') << "+\n"; };
 
-void print_border_basic() { std::cout << "+" << std::string (58, '-') << "+\n"; };
-void print_border_cross() { std::cout << "+" << std::string (4, '-') << "+" << std::string (53, '-') << "+\n"; };
+void print_border_cross() { std::cout << "+" << std::string(4, '-') << "+" << std::string(53, '-') << "+\n"; };
+
+void print_header(std::string text){
+    print_border_basic();
+    std::cout << "| " << text << std::setw(59 - text.size()) << "|\n";
+    print_border_cross();
+}
+
 void stick_space_stick() { std::cout << "|" << std::setw(6) << "| "; };
+
 void stick_numb_stick(int number) { std::cout << "|" << std::setw(3) << number << " | "; };
 
 void Journal::print_item() {
@@ -19,19 +26,50 @@ void Journal::print_item() {
     stick_numb_stick(Journal::ID);
     std::cout << Journal::name << std::setw(54 - Journal::name.size()) << "|\n";
     stick_space_stick();
-    std::cout << Journal::year << ", " << Journal::volume << "(" << Journal::issue << ")" << std::setw(50 - Journal_size) << "|\n";
+    std::cout << Journal::year << ", " << Journal::volume << "(" << Journal::issue << ")"
+              << std::setw(50 - Journal_size) << "|\n";
     print_border_cross();
 
 }
 
+// list functions
 void Book::print_item() {
     Item::print_item();
     stick_numb_stick(Book::ID);
     std::cout << Book::name << std::setw(54 - Book::name.size()) << "|\n";
     stick_space_stick();
-    std::cout << Book::year << ", " << Book::author << std::setw(52 - (Book::year.size() + Book::author.size())) << "|\n";
+    std::cout << Book::year << ", " << Book::author << std::setw(52 - (Book::year.size() + Book::author.size()))
+              << "|\n";
     print_border_cross();
 }
+
+// find function
+bool Journal::find_item(std::string arg) {
+    std::stringstream parsed;
+    parsed << name << "," << year << "," << volume << "," << issue;
+    if (parsed.str().find(arg) != std::string::npos){
+        return true;
+    }
+    return false;
+}
+
+bool Book::find_item(std::string arg) {
+    std::stringstream parsed;
+    parsed << name << "," << year << "," << author;
+    if (parsed.str().find(arg) != std::string::npos){
+        return true;
+    }
+    return false;
+}
+
+//bool find_item(std::string arg[], std::string key) {
+//    for (unsigned long i = 0; i < arg->size(); ++i) {
+//        if (arg[i] == key){
+//            return true;
+//        }
+//    }
+//    return false;
+//}
 
 Database::Database() {
     // Database constructor
@@ -56,21 +94,21 @@ Database::~Database() {
 
 // todo solve saving ID in Item
 void Database::list() {
-    print_border_basic();
-    std::cout << "| List of all records" << std::setw(40) << "|\n";
-    print_border_cross();
-    for (Item *item : db) {
+    print_header("List of all records");
+    for (Item *item: db) {
         item->print_item();
     }
 }
 
+
+
 void Database::find(std::string argument) {
-//    for(unsigned long i = 0; i < db.size(); ++i){
-//        if(Journal[i]->name.find(argument) != std::string npos){
-//            std::cout << "founded\n";
-//        }
-//    }
-    std::cout << "find " << argument << "\n";
+    print_header("Search for \""+ argument +"\"");
+    for (Item *item: db) {
+        if(item->find_item(argument)){
+            item->print_item();
+        }
+    }
 }
 
 void Database::erase(std::string basicString) {
@@ -101,12 +139,12 @@ int main() {
             if (a == "list")
                 db.list();
 
-            else if ((a == "find") || (a == "erase") || (a == "remove")){
+            else if ((a == "find") || (a == "erase") || (a == "remove")) {
                 print_border_basic();
-                std::cout << "| Command \"" << a.substr(0, position) << "\" expects some argument " << std::setw(20) <<"|\n";
+                std::cout << "| Command \"" << a.substr(0, position) << "\" expects some argument " << std::setw(20)
+                          << "|\n";
                 print_border_basic();
-            }
-            else {
+            } else {
                 //todo error handling
 
             }

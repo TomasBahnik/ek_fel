@@ -22,18 +22,13 @@ public:
 
     friend sort_name;
 
-    virtual void print_item();
+    virtual void print_item() = 0;
 
-    virtual void set_id() {} //pure virtual functions
+    virtual bool find_item(std::string arg) = 0;
 };
 int Item::count = 1;
-
-Item::~Item() {
-}
-
-void Item::print_item() {
-
-}
+Item::~Item() {}
+void Item::print_item() {}
 
 // Book related to the Database
 class Book : public Item {
@@ -44,6 +39,7 @@ public:
 private:
     std::string author;
     void print_item() override;
+    bool find_item(std::string arg) override;
 };
 
 // Journal related to the Database
@@ -56,6 +52,7 @@ private:
     std::string volume;
     std::string issue;
     void print_item() override;
+    bool find_item(std::string arg) override;
 };
 
 // declaration of the sort function according to name
