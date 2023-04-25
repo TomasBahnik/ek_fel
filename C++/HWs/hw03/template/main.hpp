@@ -25,6 +25,8 @@ public:
     virtual void print_item() = 0;
 
     virtual bool find_item(std::string arg) = 0;
+
+//    virtual void remove_item(int arg) = 0;
 };
 int Item::count = 1;
 Item::~Item() {}
@@ -40,6 +42,7 @@ private:
     std::string author;
     void print_item() override;
     bool find_item(std::string arg) override;
+//    void remove_item(int arg) override;
 };
 
 // Journal related to the Database
@@ -53,6 +56,7 @@ private:
     std::string issue;
     void print_item() override;
     bool find_item(std::string arg) override;
+//    void remove_item(int arg) override;
 };
 
 // declaration of the sort function according to name

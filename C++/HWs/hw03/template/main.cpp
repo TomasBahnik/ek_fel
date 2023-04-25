@@ -19,13 +19,13 @@ void stick_space_stick() { std::cout << "|" << std::setw(6) << "| "; };
 
 void stick_numb_stick(int number) { std::cout << "|" << std::setw(3) << number << " | "; };
 
-void print_header(std::string text){
+void print_header(std::string text) {
     print_border_basic();
     std::cout << "| " << text << std::setw(59 - text.size()) << "|\n";
     print_border_cross();
 }
 
-void print_end (int counter){
+void print_end(int counter) {
     std::cout << "| Total: " << counter << std::setw(52 - get_number_of_digits(counter)) << "|\n";
     print_border_basic();
 }
@@ -53,11 +53,11 @@ void Book::print_item() {
     print_border_cross();
 }
 
-// find function
+// find functions
 bool Journal::find_item(std::string arg) {
     std::stringstream parsed;
     parsed << name << "," << year << "," << volume << "," << issue;
-    if (parsed.str().find(arg) != std::string::npos){
+    if (parsed.str().find(arg) != std::string::npos) {
         return true;
     }
     return false;
@@ -66,7 +66,7 @@ bool Journal::find_item(std::string arg) {
 bool Book::find_item(std::string arg) {
     std::stringstream parsed;
     parsed << name << "," << year << "," << author;
-    if (parsed.str().find(arg) != std::string::npos){
+    if (parsed.str().find(arg) != std::string::npos) {
         return true;
     }
     return false;
@@ -105,18 +105,27 @@ void Database::list() {
 
 void Database::find(std::string argument) {
     int cnt = 0;
-    print_header("Search for \""+ argument +"\"");
+    print_header("Search for \"" + argument + "\"");
     for (Item *item: db) {
-        if(item->find_item(argument)){
+        if (item->find_item(argument)) {
             item->print_item();
-            cnt ++;
+            cnt++;
         }
     }
     print_end(cnt);
 }
 
-void Database::erase(std::string basicString) {
-    std::cout << "erase\n";
+void Database::erase(std::string argument) {
+    bool item_found = true;
+    while (item_found) {
+        item_found = false;
+        for (int i = 0; i < (int) db.size(); ++i) {
+            if (db[i]->find_item(argument)) {
+                db.erase(db.begin() + i);
+                item_found = true;
+            }
+        }
+    }
 }
 
 void Database::remove(std::string basicString) {
@@ -155,9 +164,9 @@ int main() {
         } else {
             std::string command = a.substr(0, position);
             std::string argument = a.substr(position + 1);
-            if (command == "find")
+            if (command == "find") {
                 db.find(argument);
-            else if (command == "erase") {
+            } else if (command == "erase") {
                 db.erase(argument);
             } else if (command == "remove") {
                 db.remove(argument);
