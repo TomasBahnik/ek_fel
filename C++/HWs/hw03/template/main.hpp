@@ -76,13 +76,15 @@ public:
 
     void list();
 
-    void find(std::string basicString);
+    void find(std::string argument);
 
-    void erase(std::string basicString);
+    void erase(std::string argument);
 
-    void remove(std::string basicString);
+    void remove(std::string argument);
 
-    void sort(std::string basicString, const char *string);
+    void sort(std::string argument, std::string order);
+
+    int size ();
 };
 
 #endif // __MAIN_HPP__
