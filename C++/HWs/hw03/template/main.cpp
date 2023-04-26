@@ -10,6 +10,8 @@
 #define ERASE "erase"
 #define REMOVE "remove"
 #define SORT "sort"
+#define NAME "name"
+#define YEAR "year"
 
 int get_number_of_digits(int i) {
     return i > 0 ? (int) log10((double) i) + 1 : 1;
@@ -151,8 +153,23 @@ void Database::remove(std::string argument) {
     }
 }
 
-void Database::sort(std::string basicString, std::string order) {
-    std::cout << "sort\n";
+void Database::sort(std::string argument, std::string order) { //todo sorting
+    if (argument == NAME){
+
+
+    } else if (argument == YEAR){
+
+
+
+    } else if (argument == "id"){
+        std::sort(db.begin(), db.end());
+        if(order == "desc") {
+            std::reverse(db.begin(),db.end());
+        }
+
+
+    }
+
 }
 
 int main() {
