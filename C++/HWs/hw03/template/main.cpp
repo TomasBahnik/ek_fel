@@ -5,6 +5,11 @@
 #include <cmath>
 #include "main.hpp"
 
+#define LIST "list"
+#define FIND "find"
+#define ERASE "erase"
+#define REMOVE "remove"
+
 int get_number_of_digits(int i) {
     return i > 0 ? (int) log10((double) i) + 1 : 1;
 }
@@ -128,9 +133,17 @@ void Database::erase(std::string argument) {
     }
 }
 
-void Database::remove(std::string basicString) {
-
-    std::cout << "remove\n";
+void Database::remove(std::string argument) {
+    bool item_found = true;
+    while (item_found) {
+        item_found = false;
+        for (int i = 0; i < (int) db.size(); ++i) {
+            if (std::stoi(argument) == i) {
+                db.erase(db.begin() + i);
+                item_found = true;
+            }
+        }
+    }
 }
 
 void Database::sort(std::string basicString, const char *stringos) {
@@ -149,17 +162,20 @@ int main() {
     while (std::getline(std::cin, a)) {
         size_t position;
         if ((position = a.find(':')) == std::string::npos) {
-            if (a == "list")
+            if (a == LIST) {
                 db.list();
-
-            else if ((a == "find") || (a == "erase") || (a == "remove")) {
+            }
+//            (a.compare(FIND)) || (a.compare(ERASE)) || (a.compare(REMOVE))
+            else if ((a == FIND) || (a == ERASE) || (a == REMOVE)) {
                 print_border_basic();
-                std::cout << "| Command \"" << a.substr(0, position) << "\" expects some argument " << std::setw(20)
+                std::cout << "| Command \"" + a.substr(0, position) + "\" expects some argument"
+                          << std::setw(27 - a.size())
                           << "|\n";
                 print_border_basic();
             } else {
-                //todo error handling
-
+                print_border_basic();
+                std::cout << "| Unknown command \"" + a.substr(0, position) + "\"" << std::setw(41 - a.size()) << "|\n";
+                print_border_basic();
             }
         } else {
             std::string command = a.substr(0, position);
