@@ -12,6 +12,7 @@
 #define SORT "sort"
 #define NAME "name"
 #define YEAR "year"
+#define ID "id"
 
 int get_number_of_digits(int i) {
     return i > 0 ? (int) log10((double) i) + 1 : 1;
@@ -41,7 +42,7 @@ void print_end(int counter) {
 void Journal::print_item() {
     Item::print_item();
     unsigned int Journal_size = Journal::year.size() + Journal::volume.size() + Journal::issue.size();
-    stick_numb_stick(Journal::ID);
+    stick_numb_stick(Journal::id);
     std::cout << Journal::name << std::setw(54 - Journal::name.size()) << "|\n";
     stick_space_stick();
     std::cout << Journal::year << ", " << Journal::volume << "(" << Journal::issue << ")"
@@ -53,7 +54,7 @@ void Journal::print_item() {
 // list functions
 void Book::print_item() {
     Item::print_item();
-    stick_numb_stick(Book::ID);
+    stick_numb_stick(Book::id);
     std::cout << Book::name << std::setw(54 - Book::name.size()) << "|\n";
     stick_space_stick();
     std::cout << Book::year << ", " << Book::author << std::setw(52 - (Book::year.size() + Book::author.size()))
@@ -154,17 +155,35 @@ void Database::remove(std::string argument) {
 }
 
 void Database::sort(std::string argument, std::string order) { //todo sorting
-    if (argument == NAME){
-
-
-    } else if (argument == YEAR){
-
-
-
-    } else if (argument == "id"){
-        std::sort(db.begin(), db.end());
-        if(order == "desc") {
-            std::reverse(db.begin(),db.end());
+    if (argument == YEAR) {
+        if (order == "desc") {
+            std::sort(db.begin(), db.end(), [](const Item *a, const Item *b) {
+                return a->year > b->year;
+            });
+        } else {
+            std::sort(db.begin(), db.end(), [](const Item *a, const Item *b) {
+                return a->year < b->year;
+            });
+        }
+    } else if (argument == NAME) {
+        if (order == "desc") {
+            std::sort(db.begin(), db.end(), [](const Item *a, const Item *b) {
+                return a->name > b->name;
+            });
+        } else {
+            std::sort(db.begin(), db.end(), [](const Item *a, const Item *b) {
+                return a->name < b->name;
+            });
+        }
+    } else if (argument == ID) {
+        if (order == "desc") {
+            std::sort(db.begin(), db.end(), [](const Item *a, const Item *b) {
+                return a->id > b->id;
+            });
+        } else {
+            std::sort(db.begin(), db.end(), [](const Item *a, const Item *b) {
+                return a->id < b->id;
+            });
         }
 
 

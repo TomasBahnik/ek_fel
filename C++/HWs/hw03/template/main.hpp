@@ -10,12 +10,14 @@ struct sort_name;
 
 class Item {
 protected:
-    int ID;
     static int count;
-    std::string name, year;
 public:
+    std::string name;
+    std::string year;
+    int id;
+
     Item(std::string name, std::string year) : name(name), year(year) {
-        ID = count ++;
+        id = count ++;
     };
 
     virtual ~Item();
@@ -25,8 +27,6 @@ public:
     virtual void print_item() = 0;
 
     virtual bool find_item(std::string arg) = 0;
-
-//    virtual void remove_item(int arg) = 0;
 };
 int Item::count = 1;
 Item::~Item() {}
