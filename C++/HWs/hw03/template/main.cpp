@@ -20,13 +20,13 @@ int get_number_of_digits(int i) {
 
 // table functions
 
-void print_border_basic() { std::cout << "+" << std::string(58, '-') << "+\n"; };
+void print_border_basic() { std::cout << "+" << std::string(58, '-') << "+\n"; }
 
-void print_border_cross() { std::cout << "+" << std::string(4, '-') << "+" << std::string(53, '-') << "+\n"; };
+void print_border_cross() { std::cout << "+" << std::string(4, '-') << "+" << std::string(53, '-') << "+\n"; }
 
-void stick_space_stick() { std::cout << "|" << std::setw(6) << "| "; };
+void stick_space_stick() { std::cout << "|" << std::setw(6) << "| "; }
 
-void stick_numb_stick(int number) { std::cout << "|" << std::setw(3) << number << " | "; };
+void stick_numb_stick(int number) { std::cout << "|" << std::setw(3) << number << " | "; }
 
 void print_header(std::string text) {
     print_border_basic();
@@ -79,6 +79,12 @@ bool Book::find_item(std::string arg) {
         return true;
     }
     return false;
+}
+bool Journal::get_id(int arg){
+    return arg == id;
+}
+bool Book::get_id(int arg){
+    return arg == id;
 }
 
 Database::Database() {
@@ -142,19 +148,14 @@ void Database::erase(std::string argument) {
 }
 
 void Database::remove(std::string argument) {
-    bool item_found = true;
-    while (item_found) {
-        item_found = false;
-        for (int i = 0; i < (int) db.size(); ++i) {
-            if (std::stoi(argument) == i) {
-                db.erase(db.begin() + i);
-                item_found = true;
-            }
+    for (int i = 1; i < (int) db.size(); ++i) {
+        if (db[i]->get_id(std::stoi(argument))) {
+            db.erase(db.begin() + i);
         }
     }
 }
 
-void Database::sort(std::string argument, std::string order) { //todo sorting
+void Database::sort(std::string argument, std::string order) {
     if (argument == YEAR) {
         if (order == "desc") {
             std::sort(db.begin(), db.end(), [](const Item *a, const Item *b) {
