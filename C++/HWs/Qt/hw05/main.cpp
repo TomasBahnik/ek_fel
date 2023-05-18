@@ -54,13 +54,13 @@ int main(int argc, char *argv[]) {
     });
 
     // define all buttons + spinBox
-    QPushButton *playButton = new QPushButton("Play");
-    QPushButton *upButton = new QPushButton("Move Up");
-    QPushButton *downButton = new QPushButton("Move Down");
-    QPushButton *addButton = new QPushButton("Add");
-    QPushButton *removeButton = new QPushButton("Remove");
-    QLabel *spinBoxLabel = new QLabel("Set speed:");
-    QSpinBox *spinBox = new QSpinBox();
+    auto *playButton = new QPushButton("Play");
+    auto *upButton = new QPushButton("Move Up");
+    auto *downButton = new QPushButton("Move Down");
+    auto *addButton = new QPushButton("Add");
+    auto *removeButton = new QPushButton("Remove");
+    auto *spinBoxLabel = new QLabel("Set speed:");
+    auto *spinBox = new QSpinBox();
 
     // parameters
     playButton->setFixedWidth(playButton->fontMetrics().boundingRect(playButton->text()).width() + 10);
@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) {
     });
 
     // set all controls button (+ label for spinBox)
-    QHBoxLayout *controlsLayout = new QHBoxLayout();
+    auto *controlsLayout = new QHBoxLayout();
     controlsLayout->addWidget(playButton);
     controlsLayout->addWidget(upButton);
     controlsLayout->addWidget(downButton);
@@ -138,12 +138,12 @@ int main(int argc, char *argv[]) {
     controlsLayout->addWidget(spinBox);
 
     // set layout for controls and labels
-    QVBoxLayout *mainLayout = new QVBoxLayout();
+    auto *mainLayout = new QVBoxLayout();
     mainLayout->addWidget(&label);
     mainLayout->addLayout(controlsLayout);
 
     // main layout
-    QWidget *mainWidget = new QWidget();
+    auto *mainWidget = new QWidget();
     mainWidget->setLayout(mainLayout);
 
     // show main window
