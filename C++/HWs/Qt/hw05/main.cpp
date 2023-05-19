@@ -12,6 +12,8 @@
 #include <iostream>
 #include <filesystem>
 
+QString getCurrentPath();
+
 namespace fs = std::filesystem;
 
 /**
@@ -24,11 +26,12 @@ namespace fs = std::filesystem;
  */
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-
+    QString currPath = getCurrentPath();
     // directory of frames
-    const fs::path framesPath = fs::current_path() /= "frames";
-    std::cout << "Frames path is " << framesPath << '\n';
-    QDir imageDir(framesPath);
+    QString dir = QFileDialog::getExistingDirectory(nullptr, "Open Directory with images", currPath,
+                                                    QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    std::cout << "Frames path is " << dir.toStdString() << '\n';
+    QDir imageDir(dir);
 
     //filter
     QStringList filters = {"*.jpg", "*.jpeg", "*.png"};
@@ -153,6 +156,14 @@ int main(int argc, char *argv[]) {
     timer.start(interval);
 
     return app.exec();
+}
+
+QString getCurrentPath() {
+    const fs::path currentPath = fs::current_path();
+    const std::string cwd_string{currentPath.u8string()};
+    const char * char_path = cwd_string.c_str();
+    QString currPath = QString(char_path);
+    return currPath;
 }
 
 
