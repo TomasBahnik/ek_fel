@@ -18,6 +18,13 @@ HEADERS += \
 FORMS += \
     mainwindow.ui
 
+CONFIG(debug, debug|release) {
+    DESTDIR = debug
+}
+# according to test.sh script executable is expected in debug
+CONFIG(release, debug|release) {
+    DESTDIR = debug
+}
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
