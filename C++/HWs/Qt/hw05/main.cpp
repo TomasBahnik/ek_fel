@@ -10,25 +10,11 @@
 #include <QFileDialog>
 #include <QStyle>
 #include <iostream>
-#include <filesystem>
 
-QString getCurrentPath();
-
-namespace fs = std::filesystem;
-
-/**
- * folder with frames is expected on <working_directory>/frames
- * When run from Qt Creator IDE <working_directory> is
- * value of key="RunConfiguration.WorkingDirectory.default in hw05.pro.user
- * When run from binary file (hw05)
- * drwxrwxr-x frames
- * -rwxrwxr-x hw05
- */
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-    QString currPath = getCurrentPath();
     // directory of frames
-    QString dir = QFileDialog::getExistingDirectory(nullptr, "Open Directory with images", currPath,
+    QString dir = QFileDialog::getExistingDirectory(nullptr, "Open Directory with images", QDir::currentPath(),
                                                     QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
     std::cout << "Frames path is " << dir.toStdString() << '\n';
     QDir imageDir(dir);
@@ -155,17 +141,5 @@ int main(int argc, char *argv[]) {
     // start animation
     timer.start(interval);
 
-    return app.exec();
+    return QApplication::exec();
 }
-
-QString getCurrentPath() {
-    const fs::path currentPath = fs::current_path();
-    const std::string cwd_string{currentPath.u8string()};
-    const char * char_path = cwd_string.c_str();
-    QString currPath = QString(char_path);
-    return currPath;
-}
-
-
-
-
